@@ -1,5 +1,5 @@
 [package]
-name = "sbt-stdio-language-server"
+name = "sbtserver"
 version = "0.1.0"
 authors = ["Ophirr33 <Coghlan.Ty@gmail.com>"]
 
