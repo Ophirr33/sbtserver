@@ -28,15 +28,15 @@ fn run() -> Result<()> {
     let socket_path = socket_info.uri.rsplit("local://").next().unwrap();
 
     // Start up the listener
-    let mut lsp_socket = UnixStream::connect(socket_path)?;
-    lsp_socket.set_nonblocking(false)?;
-    let mut write_half = lsp_socket.try_clone()?;
+    let mut read_half = UnixStream::connect(socket_path)?;
+    read_half.set_nonblocking(false)?;
+    let mut write_half = read_half.try_clone()?;
 
     let t1 = thread::spawn(move || {
         copy(&mut stdin(), &mut write_half).unwrap();
     });
     thread::spawn(move || {
-        copy(&mut lsp_socket, &mut stdout()).unwrap();
+        copy(&mut read_half, &mut stdout()).unwrap();
     });
     let _ = t1.join();
     Ok(())
